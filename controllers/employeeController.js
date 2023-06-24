@@ -30,7 +30,7 @@ async function getEmployee(req, res, next) {
 
 async function createEmployee(req, res, next) {
   try {
-    const { firstname, middlename, lastname, number, email, gender, dob } =
+    const { name, number, email, gender, dob } =
       req.body;
     const decodedToken = jwt.verify(getTokenFrom(req), config.SECRET);
 
@@ -48,9 +48,7 @@ async function createEmployee(req, res, next) {
     const photoUrl = `https://firebasestorage.googleapis.com/v0/b/${snapshot.ref.bucket}/o/${snapshot.ref.fullPath}?alt=media`;
 
     const employee = new Employee({
-      firstname,
-      middlename,
-      lastname,
+      name,
       number,
       email,
       gender,
@@ -75,7 +73,7 @@ async function createEmployee(req, res, next) {
 
 async function updateEmployee(req, res, next) {
   const id = req.params.id;
-  const { firstname, middlename, lastname, number, email, gender, dob } =
+  const { name, number, email, gender, dob } =
     req.body;
 
   const previousEmployee = await Employee.findById(id);
@@ -83,9 +81,7 @@ async function updateEmployee(req, res, next) {
   let photoUrl = "";
 
   if (
-    firstname === undefined ||
-    middlename === undefined ||
-    lastname === undefined ||
+    name === undefined ||
     email === undefined ||
     gender === undefined ||
     dob === undefined ||
@@ -94,9 +90,7 @@ async function updateEmployee(req, res, next) {
     return res.status(400).json({ error: "Content is missing" });
 
   if (
-    firstname === "" ||
-    middlename === "" ||
-    lastname === "" ||
+    name === "" ||
     email === "" ||
     gender === "" ||
     dob === "" ||
@@ -105,9 +99,7 @@ async function updateEmployee(req, res, next) {
     return res.status(400).json({ error: "All fields are required" });
 
   if (
-    !isString(firstname) ||
-    !isString(middlename) ||
-    !isString(lastname) ||
+    !isString(name) ||
     !isString(email) ||
     !isString(gender) ||
     !isString(dob) ||
@@ -128,9 +120,7 @@ async function updateEmployee(req, res, next) {
   }
 
   const employee = {
-    firstname,
-    middlename,
-    lastname,
+    name,
     number,
     email,
     gender,
